@@ -10,7 +10,7 @@ import ctr.common.base.BaseFragment
 import ctr.custumview.databinding.FragmentCustomWaveBinding
 import ctr.custumview.fragment.firstCustom.FirstCustomModel
 import ctr.custumview.util.Config
-import ctr.custumview.wedget.timer.TimeView
+import ctr.custumview.wedget.wave.WaveView
 
 @Route(path = Config.FRAGMENT_WAVE_CUSTOM)
 class WaveCustomFragment : BaseFragment(){
@@ -23,14 +23,12 @@ class WaveCustomFragment : BaseFragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val timeView = view.findViewById<TimeView>(R.id.timeView)
-        timeView.start()
+
         bind = FragmentCustomWaveBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
         bind.model=model
-
-
-
+        val waveView = view.findViewById<WaveView>(R.id.waveView)
+        waveView.startAnimation()
     }
 
     override fun onDestroyView() {

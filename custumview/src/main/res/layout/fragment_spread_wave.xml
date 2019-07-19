@@ -16,10 +16,11 @@
 
 
         <ctr.custumview.wedget.wave.SpreadView
+                android:id="@+id/spreadView"
                 android:layout_weight="1"
+                app:delay_milliseconds="300"
+                app:spread_color="@color/colorPrimary"
                 android:layout_width="match_parent"
-                app:spread_delay_milliseconds="350"
-                app:spread_spread_color="@color/colorAccent"
                 android:layout_height="0dp"/>
     </LinearLayout>
 </layout>

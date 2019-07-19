@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-       >
+        >
+
     <data>
-        <variable name="model" type="ctr.custumview.fragment.firstCustom.FirstCustomModel"/>
+
+        <variable
+                name="model"
+                type="ctr.custumview.fragment.firstCustom.FirstCustomModel"/>
     </data>
 
     <LinearLayout
@@ -10,11 +14,17 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-        <TextView android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="@{model.name}"/>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{model.name}"/>
 
 
+        <ctr.custumview.wedget.wave.WaveView
+                android:id="@+id/waveView"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"/>
     </LinearLayout>
 </layout>
 

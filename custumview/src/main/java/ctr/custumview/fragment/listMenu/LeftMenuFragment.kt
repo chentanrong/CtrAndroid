@@ -1,6 +1,5 @@
 package ctr.custumview.fragment.listMenu
 
-import android.databinding.Observable
 import android.os.Bundle
 import android.support.v4.app.ListFragment
 import android.view.LayoutInflater
@@ -17,7 +16,7 @@ import android.widget.ListView
 @Route(path = Config.FRAGMENT_FIRST_CUMSTOM)
 class LeftMenuFragment : ListFragment() {
     var callback: LeftFragmentCallback ?= null
-    var datalist = arrayOf("控件1", "控件2", "控件3")
+    var datalist = arrayOf("自定义时钟", "水波纹", "贝塞尔波浪")
     var pathlist = arrayOf(
         Config.FRAGMENT_FIRST_CUMSTOM,
         Config.FRAGMENT_SPREAD_WAVE,

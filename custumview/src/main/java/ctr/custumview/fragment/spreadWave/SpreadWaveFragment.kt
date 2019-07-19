@@ -23,11 +23,12 @@ class SpreadWaveFragment : BaseFragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val timeView = view.findViewById<TimeView>(R.id.timeView)
-        timeView.start()
+        val timeView = view.findViewById<TimeView>(R.id.spreadView)
+
         bind = FragmentSpreadWaveBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
         bind.model=model
+
 
 
 

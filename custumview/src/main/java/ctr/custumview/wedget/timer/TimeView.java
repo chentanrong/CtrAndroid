@@ -16,14 +16,14 @@ import java.util.TimerTask;
 public class TimeView extends View {
 
     private Context mContext;
-    private Paint mPint;
+
 
     public TimeView(Context context) {
         super(context);
         this.mContext = context;
         initPaint();
     }
-
+    private Paint mPint;
     private void initPaint() {
         mPint = new Paint();
         mPint.setAntiAlias(true);

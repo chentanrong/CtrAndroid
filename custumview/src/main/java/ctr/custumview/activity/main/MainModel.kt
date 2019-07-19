@@ -13,7 +13,7 @@ class MainModel : BaseObservable() {
                 return
             }
             field = value
-            notifyPropertyChanged(BR.sex)
+            notifyPropertyChanged(BR.text)
         }
 
 
