@@ -1,34 +1,35 @@
-package ctr.custumview.fragment.spreadWave
+package ctr.custumview.fragment.sweepStack
 
 import android.databinding.Observable
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import ctr.custumview.R
 import ctr.common.base.BaseFragment
-import ctr.custumview.databinding.FragmentSpreadWaveBinding
+import ctr.custumview.databinding.FragmentSweepStackBinding
 import ctr.custumview.fragment.firstCustom.FirstCustomModel
 import ctr.custumview.util.Config
-import ctr.custumview.wedget.timer.TimeView
+import ctr.custumview.wedget.wave.SweepStackView
 
-@Route(path = Config.FRAGMENT_SPREAD_WAVE)
-class SpreadWaveFragment : BaseFragment(){
+@Route(path = Config.FRAGMENT_SWEEP_STACK)
+class SweepStackFragment : BaseFragment(){
 
-    lateinit var bind:FragmentSpreadWaveBinding
+    lateinit var bind:FragmentSweepStackBinding
     @Autowired(name="FirstCustomModel")
     lateinit var model: FirstCustomModel
 
-    override var resId: Int =R.layout.fragment_spread_wave
+    override var resId: Int =R.layout.fragment_sweep_stack
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val timeView = view.findViewById<TimeView>(R.id.spreadView)
 
-        bind = FragmentSpreadWaveBinding.bind(view)
+        bind = FragmentSweepStackBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
         bind.model=model
-
+        val waveView = view.findViewById<SweepStackView>(R.id.sweepStack)
+        waveView.setMlistener { position, msg ->  toast(msg)}
     }
 
     override fun onDestroyView() {

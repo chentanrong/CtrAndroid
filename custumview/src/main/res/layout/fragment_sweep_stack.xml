@@ -20,9 +20,8 @@
                 android:text="@{model.name}"/>
 
 
-        <ctr.custumview.wedget.wave.WaveView
-                android:id="@+id/waveView"
-                android:paddingStart="12dp"
+        <ctr.custumview.wedget.wave.SweepStackView
+                android:id="@+id/sweepStack"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"/>

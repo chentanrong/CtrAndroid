@@ -21,8 +21,7 @@ public class WaveView extends BaseView {
     private Integer waveHeight = 0;//波浪位置高度
     private Integer waveSize = 50;//波浪尺寸高度
 
-    private Integer mHeight;
-    private Integer mWidth;
+
     private Path path = new Path();
     float moveY = 0;
     float startY = 0f;
@@ -41,16 +40,17 @@ public class WaveView extends BaseView {
         mPaint.setColor(Color.parseColor("#FF3891"));
     }
 
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(mWidth, mHeight);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mHeight = h;
-        mWidth = w;
+
         waveHeight = Float.valueOf(h * waveHeightRadio).intValue();
     }
 

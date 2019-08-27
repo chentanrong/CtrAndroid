@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.alibaba.android.arouter.launcher.ARouter
 
 
@@ -25,5 +26,10 @@ open class BaseFragment : Fragment() {
         } else {
             super.onCreateView(inflater, container, savedInstanceState)
         }
+    }
+
+    public fun toast(msg:String){
+       val toast= Toast.makeText(context,msg,Toast.LENGTH_LONG)
+        toast.show()
     }
 }

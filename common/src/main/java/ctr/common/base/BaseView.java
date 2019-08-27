@@ -8,7 +8,8 @@ import android.view.View;
 
 public class BaseView extends View {
 
-
+    public Integer mHeight;
+    public Integer mWidth;
     public Paint mPaint;
     private void initPaint() {
         mPaint = new Paint();
@@ -18,8 +19,14 @@ public class BaseView extends View {
     }
 
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        mWidth= MeasureSpec.getSize(widthMeasureSpec);
+        mHeight = MeasureSpec.getSize(heightMeasureSpec);
+    }
     public BaseView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initPaint();
     }
+
 }
