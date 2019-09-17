@@ -4,7 +4,6 @@ import android.databinding.Observable
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -13,9 +12,7 @@ import ctr.common.base.BaseFragment
 import ctr.custumview.databinding.FragmentFlowLayoutBinding
 import ctr.custumview.fragment.firstCustom.FirstCustomModel
 import ctr.custumview.util.Config
-import android.widget.TextView
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import ctr.custumview.layout.FlowLayout

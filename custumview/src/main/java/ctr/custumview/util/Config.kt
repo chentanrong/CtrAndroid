@@ -7,6 +7,7 @@ class Config{
         const val FRAGMENT_WAVE_CUSTOM="/custom/waveCustomFragment/"
         const val FRAGMENT_SWEEP_STACK="/custom/sweepStackFragment/"
         const val FRAGMENT_FLOW_LAYOUT="/custom/flowLayoutFragment/"
+        const val FRAGMENT_IMAGE_SURFACE="/custom/ImageSurfaceFragment/"
         const val ACTIVITY_MAIN="/custom/mainActivity/"
     }
 }

@@ -3,7 +3,6 @@ package ctr.custumview.fragment.sweepStack
 import android.databinding.Observable
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import ctr.custumview.R
