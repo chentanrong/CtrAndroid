@@ -13,7 +13,7 @@ public class FilePathConfig {
 
     //获取SD卡根path
     public static String getRoot() {
-        return Environment.getExternalStorageState();
+        return Environment.getExternalStorageDirectory().getPath();
     }
 
     //创建

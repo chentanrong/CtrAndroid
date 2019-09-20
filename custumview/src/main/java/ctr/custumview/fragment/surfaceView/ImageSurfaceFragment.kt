@@ -16,10 +16,18 @@ import android.graphics.BitmapFactory
 import android.graphics.Paint
 import ctr.custumview.util.FilePathConfig
 import java.io.File
+import android.R.attr.authorities
+import android.graphics.Color
+import android.net.Uri
+import android.support.v4.content.FileProvider
+import android.os.Build
+
+
 
 
 @Route(path = Config.FRAGMENT_IMAGE_SURFACE)
 class ImageSurfaceFragment : BaseFragment(){
+
 
     lateinit var bind:FragmentImageSurfaceBinding
     @Autowired(name="FirstCustomModel")
@@ -27,14 +35,14 @@ class ImageSurfaceFragment : BaseFragment(){
 
     override var resId: Int =R.layout.fragment_image_surface
 
-    lateinit var paint: Paint
+    var paint: Paint=Paint().apply {
+        this.isAntiAlias=true
+        this.style=Paint.Style.STROKE
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val imageSurface = view.findViewById<SurfaceView>(R.id.imageSurface)
-
-        paint.isAntiAlias=true
-        paint.style=Paint.Style.STROKE
 
         bind = FragmentImageSurfaceBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
@@ -45,10 +53,12 @@ class ImageSurfaceFragment : BaseFragment(){
                 if(holder==null){
                     return
                 }
-
-                val file = File(FilePathConfig.getCamera().absolutePath, "20190730_181802.jpg")
-                val decodeFile = BitmapFactory.decodeFile(file.absolutePath)?:return
                 val lockCanvas = holder.lockCanvas()
+                lockCanvas.drawColor(Color.GRAY)
+
+
+                val file = File(FilePathConfig.getCamera(),"IMG_20190914_212341.jpg")
+                val decodeFile = BitmapFactory.decodeFile(file.absolutePath)?:return
 
                 lockCanvas.drawBitmap(decodeFile,0f,0f,paint)
                 holder.unlockCanvasAndPost(lockCanvas)

@@ -1,3 +1,4 @@
+/*
 package ctr.custumview.wedget.image
 
 import android.annotation.SuppressLint
@@ -15,14 +16,21 @@ import kotlin.properties.Delegates
 
 
 class RegionImageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    BaseView(context, attrs, defStyleAttr) , ViewTreeObserver.OnGlobalLayoutListener{
-    /**
+    BaseView(context, attrs, defStyleAttr) {
+    */
+/**
      * the max size of image draw on top right
-     */
+     *//*
+
     private val SIZE_SUSPENSION = 200
 
+    */
+/**
+     * used to place image is current show
+     *//*
 
     var bitmap: Bitmap? = null
+
 
     var bitmapRegion: Bitmap? = null
 
@@ -38,7 +46,7 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
     //fixme use URI?
     var imagePath = ""
 
-    val paint = Paint()
+
 
     val focusPoint = PointF()
 
@@ -53,28 +61,33 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
 
     private val gestureDetector: GestureDetector
 
-    /**
+    */
+/**
      * to prevent the memory jitter
      * when we need Matrix instance , we can use this to get a Matrix instance
-     */
+     *//*
+
     private val rectFPool: ObjectPool<RectF>
 
-
-    /**
+    */
+/**
      * to prevent the memory jitter
      * when we need RectF instance , we can use this to get a rectF instance
-     */
+     *//*
+
     private val matrixPool: ObjectPool<Matrix>
 
-    /**
+    */
+/**
      * use to draw the bitmap to screen , it contains all translate and scale
-     */
+     *//*
+
     private val matrixDraw: Matrix
+
+    private val globalLayoutListener:ViewTreeObserver.OnGlobalLayoutListener
 
 
     init {
-        mPaint.style = Paint.Style.FILL
-        mPaint.color = Color.parseColor("#FF3891")
 
         rectFPool = object : ObjectPool<RectF>() {
             override fun reset(t: RectF) = t.apply {
@@ -121,19 +134,40 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
         })
         gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
             override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
-                //                   log("onScroll $distanceX,$distanceY")
+                // log("onScroll $distanceX,$distanceY")
                 moveImageBy(-distanceX, -distanceY)
                 return true
             }
-
-
         })
 
-        viewTreeObserver.addOnGlobalLayoutListener(this)
+        globalLayoutListener=object :ViewTreeObserver.OnGlobalLayoutListener{
+            // display the whole image when this is view first create
+            override fun onGlobalLayout() {
+                with(options) {
+                    inJustDecodeBounds = true
+                    BitmapFactory.decodeFile(imagePath, this)
+
+                    inSampleSize = getUsableInSampleSize(outWidth.toFloat() / measuredWidth)
+
+                    inJustDecodeBounds = false
+                    bitmap = BitmapFactory.decodeFile(imagePath, this)
+                    val scaleFactor = measuredWidth / bitmapWidth.toFloat()
+                    matrixDraw.reset()
+                    matrixDraw.postScale(scaleFactor, scaleFactor)
+                    //move picture to center
+                    matrixDraw.postTranslate(0f, measuredHeight / 2f - (bitmapHeight * scaleFactor) / 2)
+                }
+                invalidate()
+                viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+        }
+        viewTreeObserver.addOnGlobalLayoutListener(globalLayoutListener)
     }
-    /**
+    */
+/**
      * if need, display the high definition picture on screen
-     */
+     *//*
+
     fun displayHDImage() {
         //if raw image has never been scaled
         if (options.inSampleSize == 1) {
@@ -151,15 +185,16 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
 
         //fixme: decode region in main thread maybe not good
         bitmapRegion = bitmapRegionDecoder.decodeRegion((displayRegionRaw * options.inSampleSize).toRect(), optionRegion)
-        //        log("onScaleEnd : $displayRegionRaw scale : ${optionRegion.inSampleSize}")
         rectFPool.restore(displayRegionRaw)
         invalidate()
     }
 
 
-    /**
+    */
+/**
      * We want the actual sample size that will be used, so round down to nearest power of 2.
-     */
+     *//*
+
     private fun getUsableInSampleSize(scale: Float): Int {
         var power = 1
         while (power * 2 < scale) {
@@ -174,10 +209,12 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
         invalidate()
     }
 
-    /**
+    */
+/**
      * @param scale : the scale factor of the picture
      * @param focus : the point of scale
-     */
+     *//*
+
     fun scaleImage(scale: Float, focus: PointF) {
         //      log("scaleImage -- focus: $focus , scale: $scale")
         focusPoint.set(focus)
@@ -210,11 +247,11 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
         //      log("options scale : ${options.inSampleSize}")
         //       log("matrix scale : ${matrixDraw.getScale()}")
 
-        canvas.drawBitmap(it, matrixDraw, paint)
+        canvas.drawBitmap(it, matrixDraw, mPaint)
 
         bitmapRegion?.let {
             val screen = getDisplayRegion()
-            canvas.drawBitmap(it, null, screen, paint)
+            canvas.drawBitmap(it, null, screen, mPaint)
             rectFPool.restore(screen)
         }
 
@@ -222,7 +259,7 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
         //debug used to show some important info
         //draw a suspension image on right top
         val suspensionRect = getSuspensionRect()
-        canvas.drawBitmap(it, null, suspensionRect, paint)
+        canvas.drawBitmap(it, null, suspensionRect, mPaint)
 
         val rectRawBitmap = rectFPool.get().apply {
             set(0f, 0f, bitmapWidth.toFloat(), bitmapHeight.toFloat())
@@ -239,7 +276,7 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
         matrixRowToSus.setRectToRect(rectRawBitmap, suspensionRect, Matrix.ScaleToFit.FILL)
 
         matrixRowToSus.mapRect(displayRegionRaw) {
-            canvas.drawRect(it, paint.apply {
+            canvas.drawRect(it, mPaint.apply {
                 style = Paint.Style.STROKE
                 color = Color.GREEN
                 strokeWidth = 5f
@@ -296,9 +333,11 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
     }
 
 
-    /**
+    */
+/**
      * get the point in this rect which mapping p point from src Rect
-     */
+     *//*
+
     @Suppress("unused")
     private fun RectF.getMappingPoint(p: PointF, src: RectF) = PointF(
         getMappingX(p.x, src),
@@ -316,9 +355,11 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
     }
 
 
-    /**
+    */
+/**
      * use screen point to find this point of bitmap
-     */
+     *//*
+
     private fun PointF.getRawPosition(): PointF = PointF(-1f, -1f).apply {
         matrixDraw.invert { invert ->
             val dest = FloatArray(2)
@@ -329,9 +370,11 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
 
     }
 
-    /**
+    */
+/**
      * get matrix map rect and use it (when predicate is done , the rectFPool will restore it)
-     */
+     *//*
+
     private inline fun Matrix.mapRect(src: RectF, predicate: (RectF) -> Unit) {
         val dest = rectFPool.get()
         this@mapRect.mapRect(dest, src)
@@ -355,26 +398,7 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
         invalidate()
     }
 
-    // display the whole image when this is view first create
-    override fun onGlobalLayout() {
-        with(options) {
-            inJustDecodeBounds = true
-            BitmapFactory.decodeFile(imagePath, this)
 
-            inSampleSize = getUsableInSampleSize(outWidth.toFloat() / measuredWidth)
-
-            inJustDecodeBounds = false
-            bitmap = BitmapFactory.decodeFile(imagePath, this)
-            val scaleFactor = measuredWidth / bitmapWidth.toFloat()
-            matrixDraw.reset()
-            //     log("onGlobalLayout : scaleFactor = $scaleFactor")
-            matrixDraw.postScale(scaleFactor, scaleFactor)
-            //move picture to center
-            matrixDraw.postTranslate(0f, measuredHeight / 2f - (bitmapHeight * scaleFactor) / 2)
-        }
-        invalidate()
-        viewTreeObserver.removeOnGlobalLayoutListener(this)
-    }
 
     private fun RectF.toRect() = Rect(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())
 
@@ -403,9 +427,11 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
         bottom *= scale
     }
 
-    /**
+    */
+/**
      * a pool for restore the object to prevents memory jitter
-     */
+     *//*
+
     abstract class ObjectPool<T>(capacity: Int = 16) {
         val objects: Queue<T>
 
@@ -415,9 +441,11 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
             objects = LinkedList()
         }
 
-        /**
+        */
+/**
          *  get an object from pool , must restore it after using
-         */
+         *//*
+
         fun get(): T {
             if (objects.size == 0) {
                 return generateAnObject()
@@ -444,3 +472,4 @@ class RegionImageView @JvmOverloads constructor(context: Context, attrs: Attribu
 
 
 }
+*/
