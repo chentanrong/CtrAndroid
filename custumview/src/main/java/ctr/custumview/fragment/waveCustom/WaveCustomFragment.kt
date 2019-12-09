@@ -27,7 +27,7 @@ class WaveCustomFragment : BaseFragment(){
         bind = FragmentCustomWaveBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
         bind.model=model
-        val waveView = view.findViewById<WaveView>(R.id.waveView)
+        val waveView = view.findViewById(R.id.waveView) as WaveView
         waveView.startAnimation()
     }
 

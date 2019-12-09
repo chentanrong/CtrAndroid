@@ -7,6 +7,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import ctr.custumview.R
 import ctr.common.base.BaseActivity
+import ctr.common.base.PermissionActivity
 import ctr.custumview.databinding.ActivityMainBinding
 import ctr.custumview.fragment.firstCustom.FirstCustomModel
 import ctr.custumview.fragment.listMenu.LeftMenuFragment
@@ -14,11 +15,12 @@ import ctr.custumview.util.Config
 
 
 @Route(path = Config.ACTIVITY_MAIN)
-class MainActivity : BaseActivity() {
+class MainActivity : PermissionActivity() {
+
     lateinit var binding: ActivityMainBinding
     lateinit var model: MainModel
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+
+    override fun onPermissionSuccess() {
         binding= DataBindingUtil.setContentView(this,R.layout.activity_main)
         model= MainModel()
         model.text="跳转"
@@ -44,10 +46,11 @@ class MainActivity : BaseActivity() {
             .add(menuFragment,menuFragment.tag)
             .replace(R.id.leftFrameLayout, menuFragment)
             .commitAllowingStateLoss()
-
-
-
     }
+
+
+
+
 
     override fun onDestroy() {
         super.onDestroy()

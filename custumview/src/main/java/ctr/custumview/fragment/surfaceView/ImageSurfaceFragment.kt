@@ -21,8 +21,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.support.v4.content.FileProvider
 import android.os.Build
-
-
+import ctr.custumview.wedget.timer.TimeView
 
 
 @Route(path = Config.FRAGMENT_IMAGE_SURFACE)
@@ -42,7 +41,7 @@ class ImageSurfaceFragment : BaseFragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val imageSurface = view.findViewById<SurfaceView>(R.id.imageSurface)
+        val imageSurface = view.findViewById(R.id.imageSurface) as SurfaceView ?:return
 
         bind = FragmentImageSurfaceBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
@@ -56,11 +55,10 @@ class ImageSurfaceFragment : BaseFragment(){
                 val lockCanvas = holder.lockCanvas()
                 lockCanvas.drawColor(Color.GRAY)
 
-
                 val file = File(FilePathConfig.getCamera(),"IMG_20190914_212341.jpg")
                 val decodeFile = BitmapFactory.decodeFile(file.absolutePath)?:return
 
-                lockCanvas.drawBitmap(decodeFile,0f,0f,paint)
+                lockCanvas.drawBitmap(decodeFile,0f,0f,null)
                 holder.unlockCanvasAndPost(lockCanvas)
             }
 

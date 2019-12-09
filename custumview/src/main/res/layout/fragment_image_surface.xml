@@ -21,9 +21,9 @@
                android:layout_height="0dp"
                android:layout_weight="1"/>
 
-        <TextView android:layout_width="match_parent"
+     <!--   <TextView android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:text="RegionImageView"/>
+                  android:text="RegionImageView"/>-->
 
        <!-- <ctr.custumview.wedget.image.RegionImageView
                 android:id="@+id/regionView"

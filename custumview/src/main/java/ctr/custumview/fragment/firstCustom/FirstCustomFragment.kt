@@ -22,14 +22,12 @@ class FirstCustomFragment : BaseFragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val timeView = view.findViewById<TimeView>(R.id.timeView)
+        val timeView = view.findViewById(R.id.timeView) as TimeView?
+        timeView?:return
         timeView.start()
         bind = FragmentCustomFirstBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
         bind.model=model
-
-
-
     }
 
     override fun onDestroyView() {
