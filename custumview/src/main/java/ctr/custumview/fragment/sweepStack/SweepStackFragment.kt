@@ -12,10 +12,13 @@ import ctr.custumview.fragment.firstCustom.FirstCustomModel
 import ctr.custumview.util.Config
 import ctr.custumview.wedget.wave.SweepStackView
 
+/**
+ * 摇奖
+ */
 @Route(path = Config.FRAGMENT_SWEEP_STACK)
 class SweepStackFragment : BaseFragment(){
 
-    lateinit var bind:FragmentSweepStackBinding
+    var bind:FragmentSweepStackBinding?=null
     @Autowired(name="FirstCustomModel")
     lateinit var model: FirstCustomModel
 
@@ -26,16 +29,17 @@ class SweepStackFragment : BaseFragment(){
 
         bind = FragmentSweepStackBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
-        bind.model=model
-        val waveView = view.findViewById(R.id.sweepStack) as SweepStackView?
-        waveView?:return
-        waveView.setMlistener { position, msg ->  toast(msg)}
+        bind?.model=model
+        val waveView = view.findViewById(R.id.sweepStack) as SweepStackView? ?: return
+        waveView.setMlistener ({ position, msg ->
+            toast(msg)
+        })
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        bind.unbind()
+    override fun onDestroy() {
+        bind?.unbind()
         model.removeOnPropertyChangedCallback(callback)
+        super.onDestroy()
     }
     private val callback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {

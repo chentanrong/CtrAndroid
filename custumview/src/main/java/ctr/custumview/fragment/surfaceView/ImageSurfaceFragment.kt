@@ -28,7 +28,7 @@ import ctr.custumview.wedget.timer.TimeView
 class ImageSurfaceFragment : BaseFragment(){
 
 
-    lateinit var bind:FragmentImageSurfaceBinding
+    var bind:FragmentImageSurfaceBinding?=null
     @Autowired(name="FirstCustomModel")
     lateinit var model: FirstCustomModel
 
@@ -45,7 +45,7 @@ class ImageSurfaceFragment : BaseFragment(){
 
         bind = FragmentImageSurfaceBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
-        bind.model=model
+        bind?.model=model
 
         imageSurface.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
@@ -73,10 +73,10 @@ class ImageSurfaceFragment : BaseFragment(){
     }
 
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        bind.unbind()
+    override fun onDestroy() {
+        bind?.unbind()
         model.removeOnPropertyChangedCallback(callback)
+        super.onDestroy()
     }
     private val callback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {

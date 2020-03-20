@@ -15,7 +15,7 @@ import ctr.custumview.wedget.wave.WaveView
 @Route(path = Config.FRAGMENT_WAVE_CUSTOM)
 class WaveCustomFragment : BaseFragment(){
 
-    lateinit var bind:FragmentCustomWaveBinding
+    var bind:FragmentCustomWaveBinding?=null
     @Autowired(name="FirstCustomModel")
     lateinit var model: FirstCustomModel
 
@@ -26,15 +26,15 @@ class WaveCustomFragment : BaseFragment(){
 
         bind = FragmentCustomWaveBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
-        bind.model=model
+        bind?.model=model
         val waveView = view.findViewById(R.id.waveView) as WaveView
         waveView.startAnimation()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        bind.unbind()
+    override fun onDestroy() {
+        bind?.unbind()
         model.removeOnPropertyChangedCallback(callback)
+        super.onDestroy()
     }
     private val callback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {

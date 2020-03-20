@@ -14,7 +14,7 @@ import ctr.custumview.wedget.timer.TimeView
 @Route(path = Config.FRAGMENT_FIRST_CUMSTOM)
 class FirstCustomFragment : BaseFragment(){
 
-    lateinit var bind:FragmentCustomFirstBinding
+    var bind:FragmentCustomFirstBinding?=null
     @Autowired(name="FirstCustomModel")
     lateinit var model:FirstCustomModel
 
@@ -27,13 +27,13 @@ class FirstCustomFragment : BaseFragment(){
         timeView.start()
         bind = FragmentCustomFirstBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
-        bind.model=model
+        bind?.model=model
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        bind.unbind()
+    override fun onDestroy() {
+        bind?.unbind()
         model.removeOnPropertyChangedCallback(callback)
+        super.onDestroy()
     }
     private val callback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {

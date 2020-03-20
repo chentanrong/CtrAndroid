@@ -19,8 +19,10 @@ import io.reactivex.functions.Consumer;
 public class PermissionActivity extends BaseActivity {
     RxPermissions rxPermissions =null;
 
+
     public String[] getPermissionList() {
-        return new String[]{Manifest.permission.RECORD_AUDIO};
+        return new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.CAMERA,
+                Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE};
     }
 
     @Override

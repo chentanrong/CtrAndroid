@@ -1,4 +1,4 @@
-package ctr.custumview.fragment.spreadWave
+package ctr.custumview.fragment.regionImage
 
 import android.databinding.Observable
 import android.os.Bundle
@@ -7,27 +7,34 @@ import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import ctr.custumview.R
 import ctr.common.base.BaseFragment
-import ctr.custumview.databinding.FragmentSpreadWaveBinding
+import ctr.custumview.databinding.FragmentCustomWaveBinding
+import ctr.custumview.databinding.FragmentRegionImageBinding
 import ctr.custumview.fragment.firstCustom.FirstCustomModel
 import ctr.custumview.util.Config
-import ctr.custumview.wedget.wave.SpreadView
+import ctr.custumview.util.FilePathConfig
+import ctr.custumview.wedget.image.RegionImageView
+import ctr.custumview.wedget.wave.WaveView
+import java.io.File
 
-@Route(path = Config.FRAGMENT_SPREAD_WAVE)
-class SpreadWaveFragment : BaseFragment(){
+@Route(path = Config.FRAGMENT_REGIOM_IMAGE)
+class RegionImageFragment : BaseFragment(){
 
-    var bind:FragmentSpreadWaveBinding?=null
+    var bind:FragmentRegionImageBinding?=null
     @Autowired(name="FirstCustomModel")
     lateinit var model: FirstCustomModel
 
-    override var resId: Int =R.layout.fragment_spread_wave
+    override var resId: Int =R.layout.fragment_region_image
 
-    override  fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val spreadView = view.findViewById(R.id.spreadView) as SpreadView?
-        spreadView?:return
-        bind = FragmentSpreadWaveBinding.bind(view)
+
+        bind = FragmentRegionImageBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
         bind?.model=model
+        val waveView = view.findViewById(R.id.regionImageView) as RegionImageView
+
+        val file = File(FilePathConfig.getCamera(),"IMG_20190914_212341.jpg")
+        waveView.setInputStream(file)
     }
 
     override fun onDestroy() {
@@ -43,5 +50,6 @@ class SpreadWaveFragment : BaseFragment(){
                 }
             }
         }
+
     }
 }

@@ -13,6 +13,9 @@ import ctr.custumview.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 水波纹
+ */
 public class SpreadView extends View {
 
     private Context mContext;

@@ -19,6 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * 摇奖
+ */
 public class SweepStackView extends BaseView {
 
     private Integer mCenter;
@@ -248,7 +251,7 @@ public class SweepStackView extends BaseView {
         });
     }
 
-    interface ResultLisenter{
+    public interface ResultLisenter{
         void value(int position,String msg);
     }
 

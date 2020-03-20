@@ -15,7 +15,7 @@ import android.widget.ListView
 @Route(path = Config.FRAGMENT_FIRST_CUMSTOM)
 class LeftMenuFragment : ListFragment() {
     var callback: LeftFragmentCallback ?= null
-    var datalist = arrayOf("自定义时钟", "水波纹", "贝塞尔波浪","摇奖","流式布局","Surface图像","AudioRecord")
+    var datalist = arrayOf("自定义时钟", "水波纹", "贝塞尔波浪","摇奖","流式布局","Surface图像","大图加载","AudioRecord","手签板")
     var pathlist = arrayOf(
         Config.FRAGMENT_FIRST_CUMSTOM,
         Config.FRAGMENT_SPREAD_WAVE,
@@ -23,7 +23,9 @@ class LeftMenuFragment : ListFragment() {
         Config.FRAGMENT_SWEEP_STACK,
         Config.FRAGMENT_FLOW_LAYOUT,
         Config.FRAGMENT_IMAGE_SURFACE,
-        Config.AUDIO_RECORD_FRAGMENT
+        Config.FRAGMENT_REGIOM_IMAGE,
+        Config.AUDIO_RECORD_FRAGMENT,
+        Config.FRAGMENT_SIGNTURE
     )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -37,6 +39,7 @@ class LeftMenuFragment : ListFragment() {
             android.R.layout.simple_list_item_1, datalist
         )
     }
+
 
     override fun onListItemClick(l: ListView?, v: View?, position: Int, id: Long) {
         super.onListItemClick(l, v, position, id)

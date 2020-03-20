@@ -12,9 +12,6 @@ import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 import org.greenrobot.eventbus.EventBus
 
-/**
- * Created by Sunjie on 2017/11/14.
- */
 open class BaseApplication : DaggerApplication() {
     val metadata: Bundle? get() = applicationInfo.metaData
 

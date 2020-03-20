@@ -12,6 +12,9 @@ import android.view.MotionEvent;
 import android.view.animation.LinearInterpolator;
 import ctr.common.base.BaseView;
 
+/**
+ * 波浪
+ */
 public class WaveView extends BaseView {
 
 

@@ -13,30 +13,31 @@ import java.sql.Timestamp;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TimeView extends View {
+import ctr.common.base.BaseView;
+
+/**
+ *  时钟
+ */
+public class TimeView extends BaseView {
 
     private Context mContext;
 
 
     public TimeView(Context context) {
-        super(context);
-        this.mContext = context;
-        initPaint();
+        this(context, null, 0);
     }
-    private Paint mPint;
-    private void initPaint() {
-        mPint = new Paint();
-        mPint.setAntiAlias(true);
-        mPint.setColor(Color.BLACK);
-        mPint.setStyle(Paint.Style.STROKE);
-    }
-
 
     public TimeView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        this.mContext = context;
-        initPaint();
+        this(context, attrs, 0);
     }
+
+    public TimeView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        mPaint.setAntiAlias(true);
+        mPaint.setColor(Color.BLACK);
+        mPaint.setStyle(Paint.Style.STROKE);
+    }
+    
 
     private float mSecondDegree;//秒针的度数
     private float mMinDegree;//秒针的度数
@@ -68,13 +69,17 @@ public class TimeView extends View {
         mSecondDegree = timestamp.getSeconds() * 6f;
         mTimer.schedule(task, 0, 1000);
     }
-
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(Math.min(mWidth, mHeight), Math.min(mWidth, mHeight));
+    }
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 3, mPint);
-        canvas.drawPoint(getWidth() / 2, getHeight() / 2, mPint);
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 3, mPaint);
+        canvas.drawPoint(getWidth() / 2, getHeight() / 2, mPaint);
 
-        mPint.setStrokeWidth(1);
+        mPaint.setStrokeWidth(1);
         canvas.translate(getWidth() / 2, getHeight() / 2);
 
         int kdLength = 10;
@@ -83,48 +88,48 @@ public class TimeView extends View {
 
         for (int i = 0; i < 360; i++) {
             if (i % 30 == 0) {
-                canvas.drawLine(getWidth() / 3 - minLength, 0, getWidth() / 3, 0, mPint);
+                canvas.drawLine(getWidth() / 3 - minLength, 0, getWidth() / 3, 0, mPaint);
             } else if (i % 6 == 0) {
-                canvas.drawLine(getWidth() / 3 - secLength, 0, getWidth() / 3, 0, mPint);
+                canvas.drawLine(getWidth() / 3 - secLength, 0, getWidth() / 3, 0, mPaint);
             } else {
-                canvas.drawLine(getWidth() / 3 - kdLength, 0, getWidth() / 3, 0, mPint);
+                canvas.drawLine(getWidth() / 3 - kdLength, 0, getWidth() / 3, 0, mPaint);
             }
             canvas.rotate(1);
         }
-        mPint.setTextSize(25);
-        mPint.setStyle(Paint.Style.FILL);
+        mPaint.setTextSize(25);
+        mPaint.setStyle(Paint.Style.FILL);
         for (int i = 0; i < 12; i++) {
             if (i == 0) {
-                drawNum(canvas, i * 30, 12 + "", mPint);
+                drawNum(canvas, i * 30, 12 + "", mPaint);
             } else {
-                drawNum(canvas, i * 30, i + "", mPint);
+                drawNum(canvas, i * 30, i + "", mPaint);
             }
         }
 
         int secPointLength = 180;
         canvas.save();
-        mPint.setColor(Color.RED);
-        mPint.setStyle(Paint.Style.STROKE);
-        mPint.setStrokeWidth(2);
+        mPaint.setColor(Color.RED);
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(2);
         canvas.rotate(mSecondDegree);
-        canvas.drawLine(0, 0, 0, -secPointLength, mPint);
+        canvas.drawLine(0, 0, 0, -secPointLength, mPaint);
         canvas.restore();
 
         int minPointLength = 120;
         canvas.save();
-        mPint.setColor(Color.BLACK);
-        mPint.setStyle(Paint.Style.STROKE);
-        mPint.setStrokeWidth(4);
+        mPaint.setColor(Color.BLACK);
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(4);
         canvas.rotate(mMinDegree);
-        canvas.drawLine(0, 0, 0, -minPointLength, mPint);
+        canvas.drawLine(0, 0, 0, -minPointLength, mPaint);
         canvas.restore();
 
         int hourPointLength = 80;
         canvas.save();
-        mPint.setStyle(Paint.Style.STROKE);
-        mPint.setStrokeWidth(7);
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(7);
         canvas.rotate(mHourDegree);
-        canvas.drawLine(0, 0, 0, -hourPointLength, mPint);
+        canvas.drawLine(0, 0, 0, -hourPointLength, mPaint);
         canvas.restore();
         super.onDraw(canvas);
     }

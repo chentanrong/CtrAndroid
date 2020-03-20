@@ -2,6 +2,7 @@ package ctr.custumview.fragment.flowLayout
 
 import android.databinding.Observable
 import android.graphics.Color
+import android.graphics.SurfaceTexture
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
@@ -22,7 +23,7 @@ import ctr.custumview.wedget.timer.TimeView
 @Route(path = Config.FRAGMENT_FLOW_LAYOUT)
 class FlowLayoutFragment : BaseFragment() {
 
-    lateinit var bind: FragmentFlowLayoutBinding
+    var bind: FragmentFlowLayoutBinding?=null
     @Autowired(name = "FirstCustomModel")
     lateinit var model: FirstCustomModel
 
@@ -33,7 +34,7 @@ class FlowLayoutFragment : BaseFragment() {
 
         bind = FragmentFlowLayoutBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
-        bind.model = model
+        bind?.model = model
         val flowLayout = view.findViewById(R.id.flowLayout) as FlowLayout?
         flowLayout ?: return
         val list = arrayListOf<String>(
@@ -60,11 +61,10 @@ class FlowLayoutFragment : BaseFragment() {
         }
 
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        bind.unbind()
+    override fun onDestroy() {
+        bind?.unbind()
         model.removeOnPropertyChangedCallback(callback)
+        super.onDestroy()
     }
 
     private val callback = object : Observable.OnPropertyChangedCallback() {

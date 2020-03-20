@@ -1,4 +1,4 @@
-package ctr.custumview.fragment.spreadWave
+package ctr.custumview.fragment.signture
 
 import android.databinding.Observable
 import android.os.Bundle
@@ -7,29 +7,32 @@ import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import ctr.custumview.R
 import ctr.common.base.BaseFragment
-import ctr.custumview.databinding.FragmentSpreadWaveBinding
+import ctr.custumview.databinding.FragmentSigntureBinding
 import ctr.custumview.fragment.firstCustom.FirstCustomModel
+import ctr.custumview.fragment.signture.SigntureModel
 import ctr.custumview.util.Config
-import ctr.custumview.wedget.wave.SpreadView
+import ctr.custumview.wedget.signture.SigntureView
 
-@Route(path = Config.FRAGMENT_SPREAD_WAVE)
-class SpreadWaveFragment : BaseFragment(){
+@Route(path = Config.FRAGMENT_SIGNTURE)
+class SigntureFragment : BaseFragment(){
 
-    var bind:FragmentSpreadWaveBinding?=null
-    @Autowired(name="FirstCustomModel")
-    lateinit var model: FirstCustomModel
+    var bind:FragmentSigntureBinding?=null
 
-    override var resId: Int =R.layout.fragment_spread_wave
+    lateinit var model: SigntureModel
+
+    override var resId: Int =R.layout.fragment_signture
 
     override  fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val spreadView = view.findViewById(R.id.spreadView) as SpreadView?
-        spreadView?:return
-        bind = FragmentSpreadWaveBinding.bind(view)
+        val timeView = view.findViewById(R.id.signtureView) as SigntureView?
+        timeView?:return
+        model=SigntureModel()
+
+        model.signtureView=timeView
+        bind = FragmentSigntureBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
         bind?.model=model
     }
-
     override fun onDestroy() {
         bind?.unbind()
         model.removeOnPropertyChangedCallback(callback)
@@ -43,5 +46,6 @@ class SpreadWaveFragment : BaseFragment(){
                 }
             }
         }
+
     }
 }

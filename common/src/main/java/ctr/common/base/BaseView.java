@@ -11,6 +11,8 @@ public class BaseView extends View {
     public Integer mHeight;
     public Integer mWidth;
     public Paint mPaint;
+
+
     private void initPaint() {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
