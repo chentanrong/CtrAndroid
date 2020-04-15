@@ -1,5 +1,6 @@
 package ctr.custumview.fragment.regionImage
 
+import android.arch.lifecycle.LifecycleObserver
 import android.databinding.Observable
 import android.os.Bundle
 import android.view.View
@@ -7,13 +8,11 @@ import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import ctr.custumview.R
 import ctr.common.base.BaseFragment
-import ctr.custumview.databinding.FragmentCustomWaveBinding
 import ctr.custumview.databinding.FragmentRegionImageBinding
 import ctr.custumview.fragment.firstCustom.FirstCustomModel
 import ctr.custumview.util.Config
 import ctr.custumview.util.FilePathConfig
 import ctr.custumview.wedget.image.RegionImageView
-import ctr.custumview.wedget.wave.WaveView
 import java.io.File
 
 @Route(path = Config.FRAGMENT_REGIOM_IMAGE)
@@ -35,6 +34,10 @@ class RegionImageFragment : BaseFragment(){
 
         val file = File(FilePathConfig.getCamera(),"IMG_20190914_212341.jpg")
         waveView.setInputStream(file)
+
+    }
+    private var lifecycleObserver=object :LifecycleObserver{
+
     }
 
     override fun onDestroy() {

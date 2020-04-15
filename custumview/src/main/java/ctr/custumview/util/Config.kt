@@ -11,6 +11,7 @@ class Config{
         const val FRAGMENT_FLOW_LAYOUT="/custom/flowLayoutFragment/"
         const val FRAGMENT_IMAGE_SURFACE="/custom/ImageSurfaceFragment/"
         const val FRAGMENT_REGIOM_IMAGE="/custom/RegionImageFragment/"
+        const val FRAGMENT_CARMER="/custom/cameraFragment/"
         const val ACTIVITY_MAIN="/custom/mainActivity/"
     }
 }

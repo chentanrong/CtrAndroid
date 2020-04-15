@@ -10,10 +10,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import java.io.File;
@@ -38,11 +41,30 @@ public class RegionImageView extends View{
      */
     private int mImageWidth, mImageHeight;
     /**
+     * view高宽
+     */
+    private int mViewWidth , mViewHeight ;
+    /**
+     * 缩放值
+     */
+    private float mScale=1f  , mCurrentScale =1f;
+    /**
      * 绘制的区域
      */
     private volatile Rect mRect = new Rect();
+    /**
+     * 缩放器
+     */
+    private volatile Matrix  mMatrix = new Matrix();
+    /**
+     * 放大几倍
+     */
+    private int mMultiple =6;
+
 
     private MoveGestureDetector mDetector;
+
+    private ScaleGestureDetector scaleGestureDetector;
 
 
     private static final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -69,9 +91,28 @@ public class RegionImageView extends View{
 
     }
 
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        mViewWidth = w;
+        mViewHeight = h;
+        mRect.top = 0;
+        mRect.left = 0;
+        mRect.right = mImageWidth;
+        mRect.bottom = mImageHeight;
+
+        float v = Float.valueOf(mViewWidth) / mViewHeight;
+        float i= Float.valueOf(mImageWidth) / mImageHeight;
+        if(v <i){
+            mScale = Float.valueOf(mViewWidth)/mImageWidth;
+        }else {
+            mScale = Float.valueOf(mViewHeight)/mImageHeight;
+        }
+        mCurrentScale = mScale;
+    }
+
     public void setInputStream(File file)    {
     FileInputStream is = null;
-
         try
         {
           is=  new FileInputStream(file);
@@ -80,7 +121,6 @@ public class RegionImageView extends View{
 
             mImageWidth =  mDecoder.getWidth();
             mImageHeight = mDecoder.getHeight();
-
             requestLayout();
             invalidate();
         } catch (IOException e)
@@ -107,82 +147,73 @@ public class RegionImageView extends View{
             {
                 int moveX = (int) detector.getMoveX();
                 int moveY = (int) detector.getMoveY();
+                mRect.offset(-moveX, -moveY);
+                handleBorder();
+                invalidate();
+                return true;
+            }
+        });
 
-                if (mImageWidth > getWidth())
-                {
-                    mRect.offset(-moveX, 0);
-                    checkWidth();
-                    invalidate();
+        scaleGestureDetector=new ScaleGestureDetector(getContext(),new ScaleGestureDetector.SimpleOnScaleGestureListener(){
+            @Override
+            public boolean onScale(ScaleGestureDetector detector) {
+                //获取与上次事件相比，得到的比例因子
+                float scaleFactor = detector.getScaleFactor();
+                mCurrentScale*=scaleFactor;
+                if(mCurrentScale>mScale*mMultiple){
+                    mCurrentScale = mScale*mMultiple;
+                }else if(mCurrentScale<=mScale){
+                    mCurrentScale = mScale;
                 }
-                if (mImageHeight > getHeight())
-                {
-                    mRect.offset(0, -moveY);
-                    checkHeight();
-                    invalidate();
-                }
-
+                mRect.right = mRect.left+(int)(mViewWidth/mCurrentScale);
+                mRect.bottom = mRect.top+(int)(mViewHeight/mCurrentScale);
+                handleBorder();
+                invalidate();
+                return true;
+            }
+            @Override
+            public boolean onScaleBegin(ScaleGestureDetector detector) {
                 return true;
             }
         });
     }
 
 
-    private void checkWidth()
-    {
-
-
-        Rect rect = mRect;
-        int imageWidth = mImageWidth;
-        int imageHeight = mImageHeight;
-
-        if (rect.right > imageWidth)
-        {
-            rect.right = imageWidth;
-            rect.left = imageWidth - getWidth();
+    private void handleBorder(){
+        if(mRect.bottom>mImageHeight){
+            mRect.bottom = (int) mImageHeight;
+            mRect.top = (int) (mImageHeight-mViewHeight/mCurrentScale);
         }
-
-        if (rect.left < 0)
-        {
-            rect.left = 0;
-            rect.right = getWidth();
+        if(mRect.right>mImageWidth){
+            mRect.right = (int) mImageWidth;
+            mRect.left = (int) (mImageWidth-mViewWidth/mCurrentScale);
+        }
+        if(mRect.top<0){
+            mRect.top = 0;
+            mRect.bottom = (int) (mViewHeight/mCurrentScale);
+        }
+        if(mRect.left<0){
+            mRect.left = 0;
+            mRect.right = (int) (mViewWidth/mCurrentScale);
         }
     }
-
-
-    private void checkHeight()
-    {
-
-        Rect rect = mRect;
-        int imageWidth = mImageWidth;
-        int imageHeight = mImageHeight;
-
-        if (rect.bottom > imageHeight)
-        {
-            rect.bottom = imageHeight;
-            rect.top = imageHeight - getHeight();
-        }
-
-        if (rect.top < 0)
-        {
-            rect.top = 0;
-            rect.bottom = getHeight();
-        }
-    }
-
-
     @Override
-    public boolean onTouchEvent(MotionEvent event)
-    {
-        mDetector.onTouchEvent(event);
-        return true;
+    public boolean onTouchEvent(MotionEvent event)    {
+        boolean b = mDetector.onTouchEvent(event);
+        boolean b1 = scaleGestureDetector.onTouchEvent(event);
+        return b||b1;
     }
+    Bitmap bitmap;
 
     @Override
     protected void onDraw(Canvas canvas)
     {
         //只获取mReact区域中的图像绘制到画布上
-        Bitmap bm = mDecoder.decodeRegion(mRect, options);
-        canvas.drawBitmap(bm, 0, 0, null);
+  /*      if(bitmap!=null)
+        options.inBitmap = bitmap;*/
+        bitmap= mDecoder.decodeRegion(mRect, options);
+        mMatrix.setScale(mCurrentScale,mCurrentScale);
+        canvas.drawBitmap(bitmap,mMatrix,null);
     }
 
     @Override
@@ -190,17 +221,9 @@ public class RegionImageView extends View{
     {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        int width = getMeasuredWidth();
-        int height = getMeasuredHeight();
+        mViewWidth= getMeasuredWidth();
+        mViewHeight = getMeasuredHeight();
 
-        int imageWidth = mImageWidth;
-        int imageHeight = mImageHeight;
-
-        //默认直接显示图片的中心区域，可以自己去调节
-        mRect.left = imageWidth / 2 - width / 2;
-        mRect.top = imageHeight / 2 - height / 2;
-        mRect.right = mRect.left + width;
-        mRect.bottom = mRect.top + height;
 
     }
 

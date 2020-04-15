@@ -15,7 +15,9 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
     }
-
+    dataBinding{
+        enabled=true
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -34,6 +36,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     implementation "com.android.support:design:${config.surpport_version}"
+    implementation "com.android.support:recyclerview-v7:${config.surpport_version}"
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.google.dagger:dagger-android-support:$config.daggerVersion"
     implementation  "com.google.dagger:dagger-compiler:$config.daggerVersion"
@@ -43,4 +47,5 @@ dependencies {
     implementation "android.arch.lifecycle:viewmodel:$lifecycleVersion"
     implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
     implementation "org.greenrobot:eventbus:${config.eventbusVersion}"
+    api "org.apache.commons:commons-lang3:${config.commonslang3Version}"
 }

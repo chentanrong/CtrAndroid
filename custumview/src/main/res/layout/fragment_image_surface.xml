@@ -5,21 +5,20 @@
         <variable name="model" type="ctr.custumview.fragment.firstCustom.FirstCustomModel"/>
     </data>
 
-    <LinearLayout
+    <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-        <TextView android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:text="@{model.name}"/>
 
 
        <SurfaceView
                android:id="@+id/imageSurface"
                android:layout_width="match_parent"
-               android:layout_height="0dp"
-               android:layout_weight="1"/>
+               android:layout_height="match_parent"/>
+
+        <TextView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{model.name}"/>
 
      <!--   <TextView android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -30,6 +29,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"/>-->
-    </LinearLayout>
+    </FrameLayout>
 </layout>
 

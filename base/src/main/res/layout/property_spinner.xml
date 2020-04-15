@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="propertyItem"
+            type="com.base.app.property.PropertyItem" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="@{propertyItem.visible?View.VISIBLE:View.GONE}">
+
+        <com.appcore.widget.FontIconView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:text="@string/fic_not_null"
+            android:textColor="#FF0005"
+            android:textSize="8dp"
+            android:visibility="@{propertyItem.notnull?View.VISIBLE:View.INVISIBLE}" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/textSize"
+            android:layout_height="wrap_content"
+            android:text="@{propertyItem.label}" />
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/p_spinner1"
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/textSize"
+            android:layout_gravity="center_horizontal"
+
+            android:layout_weight="3"
+            android:enabled="@{propertyItem.enable}" />
+    </LinearLayout>
+</layout>

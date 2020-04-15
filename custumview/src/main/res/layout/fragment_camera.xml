@@ -10,17 +10,14 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
-
-        <ctr.custumview.wedget.wave.SpreadView
-                android:id="@+id/spreadView"
-                app:delay_milliseconds="300"
-                app:spread_color="@color/colorPrimary"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+       <SurfaceView
+               android:id="@+id/imageSurface"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"/>
         <TextView android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{model.name}"/>
+
     </FrameLayout>
 </layout>
 

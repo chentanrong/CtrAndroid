@@ -9,22 +9,21 @@
                 type="ctr.custumview.fragment.firstCustom.FirstCustomModel"/>
     </data>
 
-    <LinearLayout
+    <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{model.name}"/>
+            android:layout_height="match_parent">
 
 
         <ctr.custumview.wedget.wave.SweepStackView
                 android:id="@+id/sweepStack"
-                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"/>
-    </LinearLayout>
+                android:layout_height="match_parent"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{model.name}"/>
+
+    </FrameLayout>
 </layout>
 

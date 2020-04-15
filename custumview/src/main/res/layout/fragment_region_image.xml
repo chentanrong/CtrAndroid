@@ -9,23 +9,22 @@
                 type="ctr.custumview.fragment.firstCustom.FirstCustomModel"/>
     </data>
 
-    <LinearLayout
+    <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{model.name}"/>
 
 
         <ctr.custumview.wedget.image.RegionImageView
                 android:id="@+id/regionImageView"
                 android:paddingStart="12dp"
-                android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"/>
-    </LinearLayout>
+                android:layout_height="match_parent"/>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{model.name}"/>
+
+    </FrameLayout>
 </layout>
 
