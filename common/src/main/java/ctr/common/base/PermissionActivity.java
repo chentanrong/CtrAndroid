@@ -41,6 +41,12 @@ public class PermissionActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        rxPermissions=null;
+    }
+
     public void onPermissionSuccess() {
 
     }

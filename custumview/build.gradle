@@ -7,6 +7,16 @@ kapt {
         arg("AROUTER_MODULE_NAME", project.getName())
     }
 }
+apply plugin: 'com.mrcd.mmat.plugin'
+// 配置 mmat plugin
+mmat {
+    // json config file (在github的项目README中会有配置说明)
+    jsonConfigFile 'custumview/mmat-config.json'
+    // 是否禁用monkey测试
+    disableMonkey false
+    //./gradlew startMmatRunner 启动检测
+    // hprofFile "your-hprof-file-path"
+}
 def config = rootProject.ext
 android {
     compileSdkVersion config.compileSdkVersion

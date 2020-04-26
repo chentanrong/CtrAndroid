@@ -17,6 +17,7 @@ import android.graphics.Paint
 import ctr.custumview.util.FilePathConfig
 import java.io.File
 import android.R.attr.authorities
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.support.v4.content.FileProvider
@@ -31,6 +32,7 @@ class ImageSurfaceFragment : BaseFragment(){
     var bind:FragmentImageSurfaceBinding?=null
     @Autowired(name="FirstCustomModel")
     lateinit var model: FirstCustomModel
+    var decodeFile: Bitmap?=null
 
     override var resId: Int =R.layout.fragment_image_surface
 
@@ -56,13 +58,14 @@ class ImageSurfaceFragment : BaseFragment(){
                 lockCanvas.drawColor(Color.GRAY)
 
                 val file = File(FilePathConfig.getCamera(),"IMG_20190914_212341.jpg")
-                val decodeFile = BitmapFactory.decodeFile(file.absolutePath)?:return
+                decodeFile= BitmapFactory.decodeFile(file.absolutePath)?:return
 
                 lockCanvas.drawBitmap(decodeFile,0f,0f,null)
                 holder.unlockCanvasAndPost(lockCanvas)
             }
 
             override fun surfaceDestroyed(holder: SurfaceHolder?) {
+                decodeFile?.recycle()
             }
 
             override fun surfaceCreated(holder: SurfaceHolder?) {

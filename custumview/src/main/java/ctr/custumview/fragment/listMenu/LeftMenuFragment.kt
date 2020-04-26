@@ -41,6 +41,11 @@ class LeftMenuFragment : ListFragment() {
         )
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        listAdapter=null
+    }
+
 
     override fun onListItemClick(l: ListView?, v: View?, position: Int, id: Long) {
         super.onListItemClick(l, v, position, id)

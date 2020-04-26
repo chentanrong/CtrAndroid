@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.lang.ref.WeakReference;
 import java.sql.Timestamp;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,7 +21,6 @@ import ctr.common.base.BaseView;
  */
 public class TimeView extends BaseView {
 
-    private Context mContext;
 
 
     public TimeView(Context context) {
@@ -39,35 +39,58 @@ public class TimeView extends BaseView {
     }
     
 
-    private float mSecondDegree;//秒针的度数
-    private float mMinDegree;//秒针的度数
-    private float mHourDegree;//秒针的度数
-    private Timer mTimer = new Timer();
-    private TimerTask task = new TimerTask() {
+    private  float mSecondDegree;//秒针的度数
+    private   float mMinDegree;//秒针的度数
+    private  float mHourDegree;//秒针的度数
+    private Timer mTimer =null;
+
+    private static  class  MyTimerTask extends TimerTask{
+        WeakReference<TimeView> wf=null;
+        MyTimerTask( WeakReference<TimeView> wf){
+            this.wf=wf;
+        }
         @Override
         public void run() {//具体的定时任务逻辑
-            if (mSecondDegree == 360) {//因为圆一圈为360度，所以走满一圈角度清零
-                mSecondDegree = 0;
+
+            if(wf!=null){
+                TimeView timeView = wf.get();
+                if(timeView==null){
+                    return;
+                }
+                if (timeView.mSecondDegree == 360) {//因为圆一圈为360度，所以走满一圈角度清零
+                    timeView.mSecondDegree = 0;
+                }
+                if (timeView.mMinDegree == 360) {//因为圆一圈为360度，所以走满一圈角度清零
+                    timeView.mMinDegree = 0;
+                }
+                if (timeView.mHourDegree == 360) {//因为圆一圈为360度，所以走满一圈角度清零
+                    timeView.mHourDegree = 0;
+                }
+                timeView.mSecondDegree =timeView. mSecondDegree +6;//秒针
+                timeView.mMinDegree =timeView. mMinDegree + 0.1f;//分针
+                timeView.mHourDegree = timeView.mHourDegree + 1f / 120;//时针
+                timeView. postInvalidate();
             }
-            if (mMinDegree == 360) {//因为圆一圈为360度，所以走满一圈角度清零
-                mMinDegree = 0;
-            }
-            if (mHourDegree == 360) {//因为圆一圈为360度，所以走满一圈角度清零
-                mHourDegree = 0;
-            }
-            mSecondDegree = mSecondDegree +6;//秒针
-            mMinDegree = mMinDegree + 0.1f;//分针
-            mHourDegree = mHourDegree + 1f / 120;//时针
-            postInvalidate();
         }
     };
 
     public void start() {
+        if(mTimer==null){
+            mTimer= new Timer();
+        }
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         mMinDegree = timestamp.getMinutes() * 6f;
         mHourDegree = timestamp.getHours()%12 * 30f;
         mSecondDegree = timestamp.getSeconds() * 6f;
-        mTimer.schedule(task, 0, 1000);
+        WeakReference weakReference = new WeakReference<TimeView>(this);
+        MyTimerTask myTimerTask = new MyTimerTask(weakReference);
+        mTimer.schedule(myTimerTask, 0, 1000);
+    }
+    public void cancel(){
+        if(mTimer!=null){
+            mTimer.cancel();
+        }
+        mTimer=null;
     }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

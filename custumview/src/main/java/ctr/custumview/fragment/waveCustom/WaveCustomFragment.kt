@@ -18,6 +18,7 @@ class WaveCustomFragment : BaseFragment(){
     var bind:FragmentCustomWaveBinding?=null
     @Autowired(name="FirstCustomModel")
     lateinit var model: FirstCustomModel
+    var   waveView:WaveView?=null
 
     override var resId: Int =R.layout.fragment_custom_wave
 
@@ -27,13 +28,15 @@ class WaveCustomFragment : BaseFragment(){
         bind = FragmentCustomWaveBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
         bind?.model=model
-        val waveView = view.findViewById(R.id.waveView) as WaveView
-        waveView.startAnimation()
+         waveView = view.findViewById(R.id.waveView) as WaveView
+        waveView?.startAnimation()
     }
 
     override fun onDestroy() {
         bind?.unbind()
         model.removeOnPropertyChangedCallback(callback)
+        waveView?.cancel()
+        waveView=null
         super.onDestroy()
     }
     private val callback = object : Observable.OnPropertyChangedCallback() {

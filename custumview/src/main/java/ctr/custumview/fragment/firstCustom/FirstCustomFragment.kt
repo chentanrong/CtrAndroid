@@ -18,6 +18,8 @@ class FirstCustomFragment : BaseFragment(){
     @Autowired(name="FirstCustomModel")
     lateinit var model:FirstCustomModel
 
+    var timeView:TimeView?=null
+
     override var resId: Int =R.layout.fragment_custom_first
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,6 +35,8 @@ class FirstCustomFragment : BaseFragment(){
     override fun onDestroy() {
         bind?.unbind()
         model.removeOnPropertyChangedCallback(callback)
+        timeView?.cancel()
+        timeView=null
         super.onDestroy()
     }
     private val callback = object : Observable.OnPropertyChangedCallback() {

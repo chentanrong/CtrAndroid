@@ -21,6 +21,7 @@ class SweepStackFragment : BaseFragment(){
     var bind:FragmentSweepStackBinding?=null
     @Autowired(name="FirstCustomModel")
     lateinit var model: FirstCustomModel
+    var waveView:SweepStackView?=null
 
     override var resId: Int =R.layout.fragment_sweep_stack
 
@@ -30,8 +31,8 @@ class SweepStackFragment : BaseFragment(){
         bind = FragmentSweepStackBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
         bind?.model=model
-        val waveView = view.findViewById(R.id.sweepStack) as SweepStackView? ?: return
-        waveView.setMlistener ({ position, msg ->
+        waveView = view.findViewById(R.id.sweepStack) as SweepStackView? ?: return
+        waveView?.setMlistener ({ position, msg ->
             toast(msg)
         })
     }
@@ -39,6 +40,7 @@ class SweepStackFragment : BaseFragment(){
     override fun onDestroy() {
         bind?.unbind()
         model.removeOnPropertyChangedCallback(callback)
+        waveView?.stop()
         super.onDestroy()
     }
     private val callback = object : Observable.OnPropertyChangedCallback() {

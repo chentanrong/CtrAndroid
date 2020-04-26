@@ -21,6 +21,7 @@ class RegionImageFragment : BaseFragment(){
     var bind:FragmentRegionImageBinding?=null
     @Autowired(name="FirstCustomModel")
     lateinit var model: FirstCustomModel
+    var waveView:RegionImageView?=null
 
     override var resId: Int =R.layout.fragment_region_image
 
@@ -30,14 +31,19 @@ class RegionImageFragment : BaseFragment(){
         bind = FragmentRegionImageBinding.bind(view)
         model.addOnPropertyChangedCallback(callback)
         bind?.model=model
-        val waveView = view.findViewById(R.id.regionImageView) as RegionImageView
+        waveView = view.findViewById(R.id.regionImageView) as RegionImageView
 
         val file = File(FilePathConfig.getCamera(),"IMG_20190914_212341.jpg")
-        waveView.setInputStream(file)
+        waveView?.setInputStream(file)
 
     }
     private var lifecycleObserver=object :LifecycleObserver{
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        waveView?.recycle()
     }
 
     override fun onDestroy() {

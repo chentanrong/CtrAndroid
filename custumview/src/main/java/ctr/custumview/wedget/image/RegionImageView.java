@@ -136,6 +136,11 @@ public class RegionImageView extends View{
             }
         }
     }
+    public void recycle(){
+        if(bitmap!=null){
+            bitmap.recycle();
+        }
+    }
 
 
     public void init()

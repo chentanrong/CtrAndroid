@@ -10,18 +10,16 @@ import android.view.SurfaceView
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.google.common.util.concurrent.Futures.addCallback
 import ctr.common.base.BaseFragment
 import ctr.custumview.R
 import ctr.custumview.databinding.FragmentCameraBinding
-import ctr.custumview.databinding.FragmentImageSurfaceBinding
 import ctr.custumview.fragment.firstCustom.FirstCustomModel
 
 import ctr.custumview.util.Config
 import java.io.IOException
 import android.graphics.ImageFormat.NV21
-
-
+import ctr.custumview.util.FilePathConfig
+import java.io.File
 
 
 /**
@@ -30,77 +28,91 @@ import android.graphics.ImageFormat.NV21
  * @Desc
  */
 
-
 @Route(path = Config.FRAGMENT_CARMER)
-internal class CameraFragment: BaseFragment(), SurfaceHolder.Callback{
+internal class CameraFragment : BaseFragment(), SurfaceHolder.Callback ,Camera.PreviewCallback{
+
+
+    var camera: Camera? = null
+    var bind: FragmentCameraBinding? = null
+    var width = 1280
+    var height = 720
+    var framerate = 30
+    var encoder: H264EncoderService? = null
+    @Autowired(name = "FirstCustomModel")
+    lateinit var model: FirstCustomModel
+
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
         camera?.startPreview()
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
+        camera?.setPreviewCallback(null)
+        camera?.stopPreview()
+        camera = null
+        encoder?.stopEncoder()
+        encoder=null
 
     }
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
-        if(holder==null){
+        if (holder == null) {
             return
         }
+        camera = Camera.open() ?: return
+        val camera=camera?:return
+        camera.setDisplayOrientation(90)
+        val parameters = camera.getParameters()
+        parameters.previewFormat = NV21
+        parameters.setPreviewSize(1280,720 )
+        camera.setParameters(parameters)
+
+        encoder = H264EncoderService(width, height, framerate, File(FilePathConfig.getCom(),"test.mp4"))
+        encoder?.startEncoder()
         try {
-            camera?.setPreviewDisplay(holder)
-            camera?.startPreview()
+            camera.setPreviewCallback(this)
+            camera.setPreviewDisplay(holder)
+            camera.startPreview()
         } catch (e: IOException) {
             e.printStackTrace()
         }
 
+
     }
 
-
-    var camera: Camera?=null
-    var bind: FragmentCameraBinding?=null
-    @Autowired(name="FirstCustomModel")
-    lateinit var model: FirstCustomModel
+    override fun onPreviewFrame(data: ByteArray?, camera: Camera?) {
+        encoder?.putData(data)
+    }
 
     override var resId: Int = R.layout.fragment_camera
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        camera=Camera.open()
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bind = FragmentCameraBinding.bind(view)
 
         model.addOnPropertyChangedCallback(callback)
-        bind?.model=model
+        bind?.model = model
 
-        val holer = bind?.imageSurface?.holder?:return
+        val holer = bind?.imageSurface?.holder ?: return
         holer.addCallback(this)
 
-        val  camera=camera?:return
-        camera.setDisplayOrientation(90)
-        val parameters = camera.getParameters()
-        parameters.previewFormat = NV21
-        camera.setParameters(parameters)
-
-        camera.setPreviewCallback { bytes, camera -> {
-
-        }}
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
 
     }
+
 
 
     override fun onDestroy() {
         bind?.unbind()
         model.removeOnPropertyChangedCallback(callback)
-        camera?.setPreviewCallback(null)
         camera?.release()
+
         super.onDestroy()
     }
+
     private val callback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
             if (sender is FirstCustomModel) {

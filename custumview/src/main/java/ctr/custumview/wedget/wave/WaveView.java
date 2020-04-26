@@ -28,7 +28,7 @@ public class WaveView extends BaseView {
     private Path path = new Path();
     float moveY = 0;
     float startY = 0f;
-
+    ValueAnimator valueAnimator=null;
     public WaveView(Context context) {
         this(context, null, 0);
     }
@@ -109,7 +109,7 @@ public class WaveView extends BaseView {
     }
 
     public void startAnimation() {
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(0, waveLength);
+        valueAnimator = ValueAnimator.ofInt(0, waveLength);
         valueAnimator.setDuration(2000);
         valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
         valueAnimator.setInterpolator(new LinearInterpolator());
@@ -121,5 +121,12 @@ public class WaveView extends BaseView {
             }
         });
         valueAnimator.start();
+    }
+    public void  cancel(){
+        if(valueAnimator!=null){
+            valueAnimator.removeAllUpdateListeners();
+            valueAnimator.cancel();
+            valueAnimator=null;
+        }
     }
 }

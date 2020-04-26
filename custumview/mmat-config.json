@@ -1,0 +1,40 @@
+{
+  "package": "ctr.custumview",
+  "main_activity": "ctr.custumview.activity.main.MainActivity",
+  "monkey_command": "adb shell monkey -p com.example.mmat --ignore-crashes --ignore-timeouts --ignore-native-crashes --ignore-security-exceptions --pct-touch 40 --pct-motion 25 --pct-appswitch 10 --pct-rotation 5 -s 12358 -v -v -v --throttle 300 200",
+
+  "enable_force_gc": true,
+  "hprof_dir": "/data/local/tmp/",
+  "detect_leak_classes": [
+    "android.app.Activity",
+    "android.app.Fragment",
+    "android.support.v4.app.Fragment"
+  ],
+  "excluded_refs": [
+    {
+      "class": "java.lang.ref.WeakReference",
+      "fields": ["referent"],
+      "type": "instance"
+    },
+    {
+      "class": "java.lang.ref.SoftReference",
+      "fields": ["referent"],
+      "type": "instance"
+    },
+    {
+      "class": "java.lang.ref.FinalizerReference",
+      "fields": ["referent"],
+      "type": "instance"
+    },
+    {
+      "class": "android.arch.lifecycle.ReportFragment",
+      "fields": [],
+      "type": "static"
+    }
+  ],
+  "bitmap_report": {
+    "max_report_count": 20,
+    "min_width": 200,
+    "min_height": 200
+  }
+}
