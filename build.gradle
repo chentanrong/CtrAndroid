@@ -20,6 +20,8 @@ buildscript {
         // in the individual module build.gradle files
 
         classpath 'org.mrcd:mmat-plugin:0.9.1'
+
+        classpath 'com.meituan.android.walle:plugin:1.1.6'
     }
 }
 

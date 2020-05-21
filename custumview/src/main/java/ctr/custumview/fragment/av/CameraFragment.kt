@@ -1,12 +1,10 @@
 package ctr.custumview.fragment.av
 
 import android.databinding.Observable
-import android.graphics.Color
 import android.graphics.ImageFormat
 import android.hardware.Camera
 import android.os.Bundle
 import android.view.SurfaceHolder
-import android.view.SurfaceView
 import android.view.View
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -62,11 +60,14 @@ internal class CameraFragment : BaseFragment(), SurfaceHolder.Callback ,Camera.P
         val camera=camera?:return
         camera.setDisplayOrientation(90)
         val parameters = camera.getParameters()
-        parameters.previewFormat = NV21
-        parameters.setPreviewSize(1280,720 )
+        parameters.previewFormat = getPreviewFormats()?:return
+
+        val previewSize = getPreviewSize()?:return
+
+        parameters.setPreviewSize(previewSize.width,previewSize.height )
         camera.setParameters(parameters)
 
-        encoder = H264EncoderService(width, height, framerate, File(FilePathConfig.getCom(),"test.mp4"))
+        encoder = H264EncoderService(previewSize.width, previewSize.height, framerate, File(FilePathConfig.getCom(),"test.mp4"),parameters.previewFormat)
         encoder?.startEncoder()
         try {
             camera.setPreviewCallback(this)
@@ -79,10 +80,29 @@ internal class CameraFragment : BaseFragment(), SurfaceHolder.Callback ,Camera.P
 
     }
 
+    fun getPreviewSize():Camera.Size?{
+        val parameters1 = camera?.parameters?:return null
+        val supportedPreviewSizes = parameters1.supportedPreviewSizes?:return null
+        val last = supportedPreviewSizes.first()
+        return last
+    }
+
+    fun getPreviewFormats():Int?{
+        val parameters1 = camera?.parameters?:return null
+        val previewFormats = parameters1.supportedPreviewFormats?:return null
+        val yv12 = previewFormats.indexOf(ImageFormat.YV12)
+        if(yv12!=-1)
+            return ImageFormat.YV12
+        val nv21 = previewFormats.indexOf(ImageFormat.NV21)
+        if(nv21!=-1){
+            return ImageFormat.NV21
+        }
+        return -1
+    }
+
     override fun onPreviewFrame(data: ByteArray?, camera: Camera?) {
         encoder?.putData(data)
     }
-
     override var resId: Int = R.layout.fragment_camera
 
 

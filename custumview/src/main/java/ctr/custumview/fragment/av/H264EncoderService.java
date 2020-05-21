@@ -1,5 +1,6 @@
 package ctr.custumview.fragment.av;
 
+import android.graphics.ImageFormat;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
@@ -29,12 +30,11 @@ public class H264EncoderService {
     private int width, height, framerate;
     private File desFile;
     private MediaCodec mediaCodec;
-    //有界阻塞线程安全队列。如果向已满的队列继续塞入元素，
-    //将导致当前的线程阻塞。如果向空队列获取元素，那么将导致当前线程阻塞
+
     public ArrayBlockingQueue<byte[]> yuv420Queue = new ArrayBlockingQueue<>(10);
     private BufferedOutputStream outputStream;
 
-    public H264EncoderService(int width, int height, int framerate, File file) {
+    public H264EncoderService(int width, int height, int framerate, File file,int imageFormat) {
         if ((width & 1) == 1) {
             width--;
         }
@@ -47,11 +47,22 @@ public class H264EncoderService {
         this.desFile = file;
 
         MediaFormat videoFormat = MediaFormat.createVideoFormat(MIMETYPE_VIDEO_AVC, width, height);
-        videoFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar);
+
         videoFormat.setInteger(MediaFormat.KEY_BIT_RATE, width * height * 5);
         videoFormat.setInteger(MediaFormat.KEY_FRAME_RATE, 30);
         videoFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1);
+        switch(imageFormat ){
+            case ImageFormat.NV21:
+                videoFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar);
+                break;
+            case ImageFormat.YV12:
+                videoFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar);
+                break;
+            default:
+                break;
+        }
 
+        videoFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar);
 
         try {
             mediaCodec = MediaCodec.createDecoderByType(MIMETYPE_VIDEO_AVC);

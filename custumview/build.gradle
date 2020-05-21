@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+
 kapt {
     arguments {
         arg("AROUTER_MODULE_NAME", project.getName())
@@ -17,9 +18,15 @@ mmat {
     //./gradlew startMmatRunner 启动检测
     // hprofFile "your-hprof-file-path"
 }
+
+
+
 def config = rootProject.ext
 android {
     compileSdkVersion config.compileSdkVersion
+
+    flavorDimensions "default"
+
     defaultConfig {
         applicationId "ctr.custumview"
         minSdkVersion config.minSdkVersion
@@ -45,6 +52,14 @@ android {
         enabled=true
     }
 
+    productFlavors{
+        xiaomi {
+            manifestPlaceholders =[channel: "xiaomi"]
+        }
+        oppo {
+            manifestPlaceholders =[channel: "oppo"]
+        }
+    }
 }
 
 
@@ -71,5 +86,8 @@ dependencies {
     implementation 'com.alibaba:arouter-compiler:1.2.2'
 
     implementation project(path: ':common')
+
+    implementation 'com.meituan.android.walle:library:1.1.6'
+
 
 }
